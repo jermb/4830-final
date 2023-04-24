@@ -1,1 +1,26 @@
 <p>search works!</p>
+
+<form (submit)="search(form)" #form="ngForm">
+  <mat-form-field appearance="fill">
+    <textarea name="searchTerms" id="searchTerms" cols="30" rows="1" ngModel></textarea>
+    <mat-form-field appearance="fill">
+      <mat-label>Keyword</mat-label>
+      <mat-select name="searchType" id="searchType" ngModel>
+        <mat-option value="q">Keyword</mat-option>
+        <mat-option value="title">Title</mat-option>
+        <mat-option value="author">Author</mat-option>
+      </mat-select>
+    </mat-form-field>
+  </mat-form-field>
+</form>
+
+<div id="searchResults">
+  <div *ngFor="let book of books">
+    <img src="https://covers.openlibrary.org/b/olid/{{ book.id }}-M.jpg" alt="{{ book.title }} Cover">
+    <h2>{{ book.title }}</h2>
+    <p>{{ book.author }}</p>
+    <p>{{ book.publication }}</p>
+    <mat-icon>star</mat-icon>
+    <mat-icon>bookmark</mat-icon>
+  </div>
+</div>

@@ -1,1 +1,15 @@
-<p>header works!</p>
+<mat-toolbar color="primary">
+  <span>
+    <a routerLink="/">The Book Nook</a>
+  </span>
+  <span class="spacer"></span>
+  <ul>
+    <li *ngIf="!userIsAuthenticated">
+      <a mat-button routerLink="/login" routerLinkActive="mat-accent">Login</a>
+    </li>
+  </ul>
+</mat-toolbar>
+
+<!--<mat-toolbar>
+  <span>The Book Nook</span>
+</mat-toolbar>-->
