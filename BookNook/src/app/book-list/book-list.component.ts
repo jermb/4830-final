@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { UserService } from '../user/user.service'; 
+import { UserService } from '../user/user.service';
+import { Book } from '../book.model';
 
 
 @Component({
@@ -15,10 +16,10 @@ export class BookListComponent implements OnInit, OnDestroy{
 
   constructor(public userService: UserService){}
   ngOnInit() {
-    this.userService.getBooks();
-    this.bookSub = this.userService.getBookUpdateListener().subscribe((markedBooks: Book[], favedBooks: {book: Book, score?: number}[])=>{
-      this.markedBooks = markedBooks;
-      this.favedBooks = favedBooks;
+    // this.userService.getBooks();
+    this.bookSub = this.userService.getBookUpdateListener().subscribe((list: {bookmarks: Book[], favorites: {book: Book, score?: number}[]})=>{
+      this.markedBooks = list.bookmarks;
+      this.favedBooks = list.favorites;
     })
   }
   ngOnDestroy() {

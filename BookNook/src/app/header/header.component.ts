@@ -1,6 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from "rxjs";
-import { Userloginfo } from '../userloginfo';
+// import { Userloginfo } from '../userloginfo';
 
 @Component({
   selector: 'app-header',
