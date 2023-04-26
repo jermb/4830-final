@@ -26,4 +26,3 @@ export class HeaderComponent implements OnInit, OnDestroy {
     this.authListenerSubs.unsubscribe();
   }
 }
-}
