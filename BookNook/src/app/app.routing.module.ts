@@ -13,7 +13,7 @@ const routes: Routes = [
   },
   {
     path: 'list', component : BookListComponent
-  }
+  },
   {
     path: 'login', component : LoginComponent
   }

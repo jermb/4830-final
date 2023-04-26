@@ -1,29 +1,28 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from "rxjs";
-import { Userloginfo } from '../userloginfo';
+// import { Userloginfo } from '../userloginfo';
 
 @Component({
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.css']
 })
-export class HeaderComponent implements OnInit, OnDestroy {
+export class HeaderComponent /*implements OnInit, OnDestroy*/ {
   userIsAuthenticated = false;
   private authListenerSubs: Subscription;
 
-  constructor(private Userloginfo: Userloginfo) {}
+  // constructor(private userLoginfo: Userloginfo) {}
 
-  ngOnInit() {
-    this.userIsAuthenticated = this.Userloginfo.getIsAuth();
-    this.authListenerSubs = this.Userloginfo
-      .getAuthStatusListener()
-      .subscribe(isAuthenticated => {
-        this.userIsAuthenticated = isAuthenticated;
-      });
-  }
+  // ngOnInit() {
+  //   this.userIsAuthenticated = this.userLoginfo.getIsAuth();
+  //   this.authListenerSubs = this.userLoginfo
+  //     .getAuthStatusListener()
+  //     .subscribe(isAuthenticated => {
+  //       this.userIsAuthenticated = isAuthenticated;
+  //     });
+  // }
 
-  ngOnDestroy() {
-    this.authListenerSubs.unsubscribe();
-  }
-}
+  // ngOnDestroy() {
+  //   this.authListenerSubs.unsubscribe();
+  // }
 }

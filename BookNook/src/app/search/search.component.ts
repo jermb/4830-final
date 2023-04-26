@@ -12,14 +12,20 @@ export class SearchComponent {
   books: Book[];
 
   search(form: NgForm) {
+    //  Calls the OpenLibrary API
     fetch(`https://openlibrary.org/search.json?${ form.value.searchType }=${ this.urlize(form.value.searchTerms) }`)
     .then(response => response.json())
     .then(data => {
       var docs = data["docs"];
-      var tempBooks: Book[];
+      var tempBooks: Book[] = [];
 
+      //  Creates an object from each item in json
       for (var item in docs) {
-        const book: Book = { title: item["title"], author: item["author"], publication: item["first_publish_year"], id: item["edition_key"] };
+        item = docs[item];
+        const key = item["key"].replace("/works/", "");
+        const book: Book = { title: item["title"], author: item["author_name"], publication: item["first_publish_year"], id: key };
+        console.log(item);
+        console.log(book);
         tempBooks.push(book);
       }
 
@@ -28,7 +34,17 @@ export class SearchComponent {
     .catch(error => {
       // handle any errors
       console.log("Search did not return any results.");
+      console.log(error);
     });
+  }
+
+
+  favorite(id: string) {
+    console.log(id);
+  }
+
+  bookmark(id: string) {
+    console.log(id);
   }
 
 
