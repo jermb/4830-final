@@ -1,16 +1,29 @@
-<mat-accordion multi="true" *ngIf="books.length > 0">
-    <mat-expansion-panel *ngFor="let post of posts">
+<mat-accordion multi="true" *ngIf="markedBooks.length > 0">
+    <mat-expansion-panel *ngFor="let book of markedBooks">
       <mat-expansion-panel-header>
         <p>
-          {{post.title}}
+          {{book.title}}
         </p>
       </mat-expansion-panel-header>
-      <p>{{post.content}}.</p>
+      <p>{{book.author}}</p>
       <mat-action-row>
-        <button mat-button color="primary" >Edit</button>
         <button mat-button color="accent" (click)="onDelete(post.id)">Delete</button>
       </mat-action-row>
     </mat-expansion-panel>
   </mat-accordion>
-  <p class="info-text mat-body-1" *ngIf="books.length <= 0">No content to render</p>
+  <mat-accordion multi="true" *ngIf="favedBooks.length > 0">
+    <mat-expansion-panel *ngFor="let book of favedBooks">
+      <mat-expansion-panel-header>
+        <p>
+          {{book.title}}
+        </p>
+      </mat-expansion-panel-header>
+      <p>{{book.author}}</p>
+      <mat-action-row>
+        <button mat-button color="accent" (click)="onDelete(post.id)">Delete</button>
+      </mat-action-row>
+    </mat-expansion-panel>
+  </mat-accordion>
+  <p class="info-text mat-body-1" *ngIf="markedBooks.length <= 0">No Bookmarked books to render</p>
+  <p class="info-text mat-body-1" *ngIf="favedBooks.length <= 0">No Favorited books to render</p>
   
