@@ -9,14 +9,16 @@ import { UserService } from '../user/user.service';
   styleUrls: ['./book-list.component.css']
 })
 export class BookListComponent implements OnInit, OnDestroy{
-  books: User[] = []
+  markedBooks: Book[] = []
+  favedBooks: {book: Book, score?: number}[]
   private bookSub: Subscription;
 
   constructor(public userService: UserService){}
   ngOnInit() {
-    this.userService.getMarkedBooks();
-    this.bookSub = this.userService.getBookUpdateListener().subscribe((books: BookList[])=>{
-      this.books = books;
+    this.userService.getBooks();
+    this.bookSub = this.userService.getBookUpdateListener().subscribe((markedBooks: Book[], favedBooks: {book: Book, score?: number}[])=>{
+      this.markedBooks = markedBooks;
+      this.favedBooks = favedBooks;
     })
   }
   ngOnDestroy() {

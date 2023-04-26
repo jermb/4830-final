@@ -1,4 +1,4 @@
-<mat-accordion multi="true" *ngIf="bookList.length > 0">
+<mat-accordion multi="true" *ngIf="books.length > 0">
     <mat-expansion-panel *ngFor="let post of posts">
       <mat-expansion-panel-header>
         <p>
@@ -12,5 +12,5 @@
       </mat-action-row>
     </mat-expansion-panel>
   </mat-accordion>
-  <p class="info-text mat-body-1" *ngIf="bookList.length <= 0">No content to render</p>
+  <p class="info-text mat-body-1" *ngIf="books.length <= 0">No content to render</p>
   
