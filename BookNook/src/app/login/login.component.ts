@@ -27,12 +27,13 @@ export class LoginComponent implements OnInit{
       username: ['', [Validators.required]],
       password: ['', [Validators.required]]
   })
-
+  }
   onSubmit(){
     let userinfo = this.loginForm.value;
-    this.userLogin(userinfo);
+    //this.userLogin(userinfo);
     this.loginForm.reset();
   }
+  /*
   userLogin(logininfo:Userloginfo) {
     this.accountservice.userlogin(logininfo).subscribe(
       (resResult) =&gt; {
@@ -50,6 +51,7 @@ export class LoginComponent implements OnInit{
       }
     )
   }
+  */
   /*
   onLogin(form: NgForm){
     if (form.invalid){
