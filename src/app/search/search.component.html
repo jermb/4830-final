@@ -1,0 +1,82 @@
+<div id="searchBody">
+  <form #form="ngForm">
+
+    <mat-form-field appearance="fill" id="searchTypeSelect">
+      <mat-select name="searchType" id="searchType" ngModel>
+        <mat-label>Select</mat-label>
+        <mat-option value="q" selected>All</mat-option>
+        <mat-option value="title">Title</mat-option>
+        <mat-option value="author">Author</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill" id="searchBar">
+      <textarea matInput name="searchTerms" id="searchTerms" cols="70" rows="1" ngModel></textarea>
+    </mat-form-field>
+
+    <!-- <button mat-raised-button color="primary" type="submit">
+      search
+    </button> -->
+    <mat-icon id="searchButton" (click)="search(form)">search</mat-icon>
+  </form>
+
+  <!-- <div id="searchResults">
+    <div class="book">
+      <img src="https://covers.openlibrary.org/b/id/240727-M.jpg" alt="Cover">
+      <div class="bookInfo">
+        <h2>Title</h2>
+        <p>Author</p>
+        <p>Publication</p>
+      </div>
+      <div class="bookButtons">
+        <mat-icon (click)="favorite('hello')">star</mat-icon>
+        <mat-icon (click)="bookmark('hello')">bookmark</mat-icon>
+      </div>
+    </div>
+    <div class="book">
+      <img src="https://covers.openlibrary.org/b/id/240727-M.jpg" alt="Cover">
+      <div class="bookInfo">
+        <h2>Title</h2>
+        <p>Author</p>
+        <p>Publication</p>
+      </div>
+      <div class="bookButtons">
+        <mat-icon (click)="favorite('hello')">star</mat-icon>
+        <mat-icon (click)="bookmark('hello')">bookmark</mat-icon>
+      </div>
+    </div>
+    <div class="book">
+      <img src="https://covers.openlibrary.org/b/id/240727-M.jpg" alt="Cover">
+      <div class="bookInfo">
+        <h2>Title</h2>
+        <p>Author</p>
+        <p>Publication</p>
+      </div>
+      <div class="bookButtons">
+        <mat-icon (click)="favorite('hello')">star</mat-icon>
+        <mat-icon (click)="bookmark('hello')">bookmark</mat-icon>
+      </div>
+    </div>
+  </div> -->
+
+
+  <div id="searchResults">
+    <div *ngFor="let book of books">
+      <div class="book">
+        <img src="https://covers.openlibrary.org/b/olid/{{ book.id }}-M.jpg" alt="{{ book.title }} Cover">
+        <div class="bookInfo">
+          <h2>{{ book.title }}</h2>
+          <p>{{ book.author }}</p>
+          <p>{{ book.publication }}</p>
+        </div>
+        <div class="bookButtons">
+          <mat-icon (click)="favorite(book.id)">star</mat-icon>
+          <mat-icon (click)="bookmark(book.id)">bookmark</mat-icon>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
