@@ -1,3 +1,6 @@
+<!--
+  This was the older header 
+  ----------------------------
 <mat-toolbar color="primary">
   <span>
     <a routerLink="/">The Book Nook</a>
@@ -9,7 +12,36 @@
     </li>
   </ul>
 </mat-toolbar>
+-->
+<mat-toolbar color="primary">
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span>My App</span>
+  <span class="example-spacer"></span>
+  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <mat-icon>favorite</mat-icon>
+  </button>
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+    <mat-icon>share</mat-icon>
+  </button>
+  
 
-<!--<mat-toolbar>
-  <span>The Book Nook</span>
-</mat-toolbar>-->
+<a href="">Home</a>
+<a href="login" *ngIf="!userIsAuthenticated">Login</a>
+<a href="list">List</a>
+
+
+<button mat-button [matMenuTriggerFor]="beforeMenu">Before</button>
+<mat-menu #beforeMenu="matMenu" xPosition="before">
+  <button mat-menu-item>Item 1</button>
+  <button mat-menu-item>Item 2</button>
+</mat-menu>
+
+
+<button mat-button [matMenuTriggerFor]="afterMenu">After</button>
+<mat-menu #afterMenu="matMenu" xPosition="after">
+  <button mat-menu-item>Item 1</button>
+  <button mat-menu-item>Item 2</button>
+</mat-menu>
+</mat-toolbar>
