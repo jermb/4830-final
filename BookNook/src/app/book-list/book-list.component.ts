@@ -24,6 +24,7 @@ export class BookListComponent implements OnInit, OnDestroy{
     })
     this.markedBooks = this.userService.getBookmarks();
     this.favedBooks = this.userService.getFavorites();
+    console.log(this.markedBooks, this.favedBooks)
   }
   ngOnDestroy() {
     this.bookSub.unsubscribe();
