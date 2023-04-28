@@ -1,6 +1,6 @@
 const express = require('express');
 const app = express();
-const PostModel = require('./Models/post');
+const UserModel = require('./Models/user');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose')
 
@@ -10,13 +10,15 @@ app.use(bodyParser.urlencoded({extended:false}));
 //  Connects to mongodb cluster using username and password
 //  user:<password>
 
-// mongoose.connect(link here)
-//   .then(()=>{
-//     console.log('Connected to database')
-//   })
-//   .catch(()=>{
-//     console.log('Connection error')
-//   })
+const password = "gNZ0vX9EgGfilTjB";
+
+mongoose.connect(`mongodb+srv://final:<password>@4830-final.ah3izq5.mongodb.net/?retryWrites=true&w=majority`)
+  .then(()=>{
+    console.log('Connected to database')
+  })
+  .catch(()=>{
+    console.log('Connection error')
+  })
 
 
 //  Set up CORS
@@ -36,26 +38,33 @@ app.use((req, res, next)=>{
 
 //  Adds a post to the MongoDB database
 app.post("/api/lists",(req,res,next)=>{
-  const post = new PostModel({
-    title: req.body.title,
-    content: req.body.content
-  })
-  post.save().then(createPost => {
-    res.status(201).json({
-      message:'Post added successful',
-      postId: createPost._id
-    });
-  })
-  console.log(post)
+  UserModel.findOneAndUpdate(
+    { _id: req.body.id },
+    { $set: { bookmarked: req.params.bookmarked, favorited: req.params.favorited }},
+    (err) => {
+      if (err) {
+        console.log("Could not add book list to database")
+      }
+    }
+  )
 });
+  // post.save().then(createPost => {
+  //   res.status(201).json({
+  //     message:'Post added successful',
+  //     postId: createPost._id
+  //   });
+  // })
+  // console.log(post)
+// });
 
 
 //  Retrieves information from database
 app.get('/api/lists', (req, res, next) => {
-  PostModel.find().then(documents => {
+  UserModel.findOne({ _id: req.params.id }).then(document => {
     res.status(200).json({
-      message: "This is fetched data",
-      posts: documents
+      message: "Book Lists",
+      favorited: document.favorited,
+      bookmarked: document.bookmarked
     })
   })
 });

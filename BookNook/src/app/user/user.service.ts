@@ -11,14 +11,16 @@ export class UserService {
   bookmarks: Book[] = [
     // "OL45804W",
     // "OL27448W"
-    this.getBook("OL45804W"),
-    this.getBook("OL27448W")
+    // this.getBook("OL45804W"),
+    // this.getBook("OL27448W")
+    {title: "Title", author: "The Author", publication: 1977, id: "OL45804W"}
   ];
   favorites: {book: Book, score?: number}[] = [
-    {book: this.getBook("OL45804W")},
-    {book: this.getBook("OL27448W"), score: 3}
+    // {book: this.getBook("OL45804W")},
+    // {book: this.getBook("OL27448W"), score: 3}
     // {id:"OL45804W"},
     // {id: "OL27448W", score: 3}
+    {book:{title: "Title", author: "The Author", publication: 1977, id: "OL45804W"}, score: 3}
   ];
 
   private bookListener = new Subject<{bookmarks: Book[], favorites: {book: Book, score?: number}[]}>();
@@ -29,13 +31,15 @@ export class UserService {
     return this.bookListener.asObservable();
   }
 
-  favorite(id: string) {
-    this.bookmarks.push(this.getBook(id));
+  async favorite(id: string) {
+    const book: Book = await this.getBook(id)
+    this.bookmarks.push(book);
     this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
   }
 
-  bookmark(id: string) {
-    this.favorites.push({book: this.getBook(id)});
+  async bookmark(id: string) {
+    const book: Book = await this.getBook(id)
+    this.favorites.push({book:book});
     this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
   }
 
@@ -49,17 +53,17 @@ export class UserService {
 
 
   //  Uses the open library api to get information on books from the book ids
-  private getBook(id: string) {
+  private async getBook(id: string) {
     var title, author, publication;
 
     //  Uses the OpenLibrary ID to get information on the book
-    fetch(`https://openlibrary.org/works/${ id }.json`)
+    await fetch(`https://openlibrary.org/works/${ id }.json`)
     .then(response => response.json())
     .then(data => {
-
       title = data["title"];
       var author_key = data["authors"][0]["author"]["key"]
       publication = new Date(data["publish_date"]).getFullYear();
+      console.log(title);
 
       //  Uses the author_key to make another api call to get the author name.
       return fetch(`https://openlibrary.org${ author_key }.json`)
@@ -74,7 +78,6 @@ export class UserService {
       console.log(error);
       return;
     });
-
     const book: Book = {title: title, author: author, publication: publication, id: id};
     return book;
   }
