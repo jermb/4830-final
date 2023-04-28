@@ -8,6 +8,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { FormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input';
 import { HttpClientModule } from '@angular/common/http';
@@ -37,6 +38,7 @@ import { BookListComponent } from './book-list/book-list.component';
     MatSelectModule,
     MatIconModule,
     MatInputModule,
+    MatMenuModule,
     HttpClientModule
   ],
   providers: [],

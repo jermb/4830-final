@@ -1,6 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from "rxjs";
-// import { Userloginfo } from '../userloginfo';
+import { Userloginfo } from '../login/userloginfo';
+import {MatMenuModule} from '@angular/material/menu';
 
 @Component({
   selector: 'app-header',
