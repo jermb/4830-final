@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Book } from '../book.model';
 import { Subject } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +23,7 @@ export class UserService {
 
   private bookListener = new Subject<{bookmarks: Book[], favorites: {book: Book, score?: number}[]}>();
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   getBookUpdateListener() {
     return this.bookListener.asObservable();
@@ -49,35 +50,29 @@ export class UserService {
 
   //  Uses the open library api to get information on books from the book ids
   private getBook(id: string) {
-    var title, author, author_key, publication;
+    var title, author, publication;
 
-    fetch(`https://openlibrary.org/books/${ id }.json`)
+    //  Uses the OpenLibrary ID to get information on the book
+    fetch(`https://openlibrary.org/works/${ id }.json`)
     .then(response => response.json())
     .then(data => {
 
       title = data["title"];
-      author_key = data["authors"][0]["key"]
+      var author_key = data["authors"][0]["author"]["key"]
       publication = new Date(data["publish_date"]).getFullYear();
 
+      //  Uses the author_key to make another api call to get the author name.
+      return fetch(`https://openlibrary.org${ author_key }.json`)
     })
-    .catch(error => {
-      // handle any errors
-      console.log("Could not load book.");
-      console.log(error);
-      return;
-    });
-
-    fetch(`https://openlibrary.org${ author_key }.json`)
     .then(response => response.json())
     .then(data => {
-
       author = data["name"];
-
     })
     .catch(error => {
       // handle any errors
-      console.log("Could not load author.");
+      console.log(`Could not load book. https://openlibrary.org/works/${ id }.json`);
       console.log(error);
+      return;
     });
 
     const book: Book = {title: title, author: author, publication: publication, id: id};
