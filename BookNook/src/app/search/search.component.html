@@ -1,7 +1,7 @@
 <div id="searchBody">
   <form #form="ngForm">
     <mat-form-field appearance="fill" id="searchTypeSelect">
-      <mat-label>Keyword</mat-label>
+      <mat-label>Select Keyword</mat-label>
       <mat-select name="searchType" id="searchType" ngModel>
         <mat-option value="q" selected>All</mat-option>
         <mat-option value="title">Title</mat-option>
@@ -9,6 +9,7 @@
       </mat-select>
     </mat-form-field>
     <mat-form-field appearance="fill" id="searchBar">
+      <mat-label>Enter Search</mat-label>
       <input matInput type="text" name="searchTerms" id="searchTerms" cols="70" rows="0" (keyup.enter)="search(form)" ngModel>
     </mat-form-field>
 

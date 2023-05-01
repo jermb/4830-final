@@ -12,9 +12,9 @@ form {
 
 #searchTypeSelect {
   display: inline-flex;
-  width: 150px;
+  width: 175px;
   position: absolute;
-  left: 30%;
+  left: 28%;
   top: 24%
 }
 
