@@ -11,19 +11,19 @@ import { Book } from '../book.model';
 })
 export class BookListComponent implements OnInit, OnDestroy{
   markedBooks: Book[] = []
-  favedBooks: {book: Book, score?: number}[]
+  favedBooks: {book: Book, score?: number}[] = [];
   private bookSub: Subscription;
 
   constructor(public userService: UserService){}
 
-  ngOnInit() {
+  async ngOnInit() {
     // this.userService.getBooks();
     this.bookSub = this.userService.getBookUpdateListener().subscribe((list: {bookmarks: Book[], favorites: {book: Book, score?: number}[]})=>{
       this.markedBooks = list.bookmarks;
       this.favedBooks = list.favorites;
     })
-    this.markedBooks = this.userService.getBookmarks();
-    this.favedBooks = this.userService.getFavorites();
+    this.markedBooks = await this.userService.getBookmarks();
+    this.favedBooks = await this.userService.getFavorites();
   }
   ngOnDestroy() {
     this.bookSub.unsubscribe();

@@ -23,6 +23,7 @@ export class UserService {
     {book:{title: "Title", author: "The Author", publication: 1977, id: "OL45804W"}, score: 3}
   ];
 
+  //  One Listener for both arrays
   private bookListener = new Subject<{bookmarks: Book[], favorites: {book: Book, score?: number}[]}>();
 
   constructor(private http: HttpClient) { }
@@ -31,25 +32,72 @@ export class UserService {
     return this.bookListener.asObservable();
   }
 
+
+
+
+  /***** Adds *****/
   async favorite(id: string) {
     const book: Book = await this.getBook(id)
-    this.bookmarks.push(book);
-    this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
+    this.http.post<{message: string, bookID: string}>('http://localhost:3000/api/favorites', id).subscribe((response) => {
+      this.favorites.push({book:book});
+      this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
+    })
   }
 
   async bookmark(id: string) {
     const book: Book = await this.getBook(id)
-    this.favorites.push({book:book});
-    this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
+    this.http.post<{message: string, bookID: string}>('http://localhost:3000/api/bookmarks', id).subscribe((response) => {
+      this.bookmarks.push(book);
+      this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
+    })
   }
 
-  getFavorites() {
-    return [...this.favorites]
+
+
+
+
+  /***** Post *****/
+  async getFavorites() {
+    await this.http.get<{message:string, favorited: {book: string, score?: number}[]}>(
+      'http://localhost:3000/api/favorites').subscribe(async (data)=> {
+        //  Converts each bookID into a Book object and maps them into the favorites array
+        this.favorites = await Promise.all(data.favorited.map(async (item) => {
+          return {book: await this.getBook(item.book), score: item.score};
+        }));
+        this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
+    });
+    return [...this.favorites];
   }
 
-  getBookmarks() {
-    return [...this.bookmarks]
+  async getBookmarks() {
+    await this.http.get<{message:string, bookmarked: string[]}>(
+      'http://localhost:3000/api/bookmarks').subscribe(async (data)=> {
+        //  Converts each bookID into a Book object and stores them in the bookmarks array
+        this.bookmarks = await Promise.all(data.bookmarked.map(bookID => this.getBook(bookID)));
+        this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
+    });
+    return [...this.bookmarks];
   }
+
+  deleteFavorite(id: string) {
+    this.http.delete("http://localhost:3000/api/favorites/"+id).subscribe((
+      )=>{
+        const updatedFavs = this.favorites.filter(book => book.book.id !== id);
+        this.favorites = updatedFavs;
+        this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
+      })
+  }
+
+  deleteBookmark(id: string) {
+    this.http.delete("http://localhost:3000/api/bookmarks/"+id).subscribe((
+      )=>{
+        const updatedBookmarks = this.bookmarks.filter(book => book.id !== id);
+        this.bookmarks = updatedBookmarks;
+        this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
+      })
+  }
+
+
 
 
   //  Uses the open library api to get information on books from the book ids

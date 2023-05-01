@@ -10,15 +10,20 @@ app.use(bodyParser.urlencoded({extended:false}));
 //  Connects to mongodb cluster using username and password
 //  user:<password>
 
+
 const password = "gNZ0vX9EgGfilTjB";
 
-mongoose.connect(`mongodb+srv://final:<password>@4830-final.ah3izq5.mongodb.net/?retryWrites=true&w=majority`)
+mongoose.connect(`mongodb+srv://final:${ password }@4830-final.ah3izq5.mongodb.net/?retryWrites=true&w=majority`)
   .then(()=>{
     console.log('Connected to database')
   })
-  .catch(()=>{
+  .catch((err)=>{
     console.log('Connection error')
+    console.log(err);
   })
+
+
+
 
 
 //  Set up CORS
@@ -35,15 +40,32 @@ app.use((req, res, next)=>{
   next();
 });
 
+/***************** Test Commands for adding user *****************/
+// const user = new UserModel({
+//   username: "jermb",
+//   password: "password"
+// })
+
+// user.save().then((newuser) => {
+//   console.log(newuser);
+// })
+
+var userID;
+UserModel.findOne({username: "jermb"}).then(user => {
+  userID = user._id;
+});
+
+/***************** End Test Commands for adding user *****************/
+
 
 //  Adds a post to the MongoDB database
-app.post("/api/lists",(req,res,next)=>{
+app.post("/api/bookmarks",(req,res,next)=>{
   UserModel.findOneAndUpdate(
-    { _id: req.body.id },
-    { $set: { bookmarked: req.params.bookmarked, favorited: req.params.favorited }},
+    { _id: userID },
+    { $push: { bookmarked: req.body }},
     (err) => {
       if (err) {
-        console.log("Could not add book list to database")
+        console.log("Could not push item to bookmark list on database")
       }
     }
   )
@@ -57,24 +79,71 @@ app.post("/api/lists",(req,res,next)=>{
   // console.log(post)
 // });
 
+app.post("/api/favorites",(req,res,next)=>{
+  UserModel.findOneAndUpdate(
+    { _id: userID },
+    { $push: { favorited: { book: req.body.book }}},
+    (err) => {
+      if (err) {
+        console.log("Could not add bookmark list to database")
+      }
+    }
+  )
+});
+
+app.post("/api/favorites/score",(req,res,next)=>{
+  UserModel.findOneAndUpdate(
+    { _id: userID, favorites: { $in: [{book}]} },
+    { $push: { values: { book: req.params.book }}},
+    (err) => {
+      if (err) {
+        console.log("Could not add bookmark list to database")
+      }
+    }
+  )
+});
+
 
 //  Retrieves information from database
-app.get('/api/lists', (req, res, next) => {
-  UserModel.findOne({ _id: req.params.id }).then(document => {
+app.get('/api/bookmarks', (req, res, next) => {
+  UserModel.findOne({ _id: userID }).then(document => {
     res.status(200).json({
-      message: "Book Lists",
-      favorited: document.favorited,
+      message: "Bookmark List",
       bookmarked: document.bookmarked
     })
   })
 });
 
-app.delete('/api/lists/:id', (req, res, next) => {
-  PostModel.deleteOne({_id:req.params.id}).then(result => {
-    console.log(result);
-    res.status(200).json({message: "Post Deleted"});
-  });
+app.get('/api/favorites', (req, res, next) => {
+  UserModel.findOne({ _id: userID }).then(document => {
+    res.status(200).json({
+      message: "Favorite List",
+      favorited: document.favorited
+    })
+  })
 });
+
+app.delete('/api/bookmarks/:id', (req, res, next) => {
+  UserModel.findOneAndUpdate(
+    { _id: userID },
+    { $pull: {bookmarked: req.params.id }}
+  )
+});
+
+app.delete('/api/favorites/:id', (req, res, next) => {
+  UserModel.findOneAndUpdate(
+    { _id: userID },
+    { $pull: {favorited: {id: req.params.id }}}
+  )
+});
+
+app.post('/api/favorites/score', (req, res, next) => {
+  UserModel.findOneAndUpdate(
+    { _id: userID, "favorited.id": req.body.id },
+    { $set: { "favorited.$.score": req.body.score }}
+  )
+})
+
 
 
 app.get('/', (req, res) => res.send('Hello World!'));

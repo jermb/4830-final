@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Book } from '../book.model';
+import { UserService } from '../user/user.service';
 
 @Component({
   selector: 'app-search',
@@ -10,6 +11,8 @@ import { Book } from '../book.model';
 export class SearchComponent {
 
   books: Book[];
+
+  constructor(private userService: UserService) {}
 
   search(form: NgForm) {
     console.log("searching");
@@ -42,11 +45,11 @@ export class SearchComponent {
 
 
   favorite(id: string) {
-    console.log(id);
+    this.userService.favorite(id);
   }
 
   bookmark(id: string) {
-    console.log(id);
+    this.userService.favorite(id);
   }
 
 
