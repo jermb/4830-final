@@ -2,10 +2,12 @@
     <mat-expansion-panel *ngFor="let book of markedBooks">
       <mat-expansion-panel-header>
         <p>
+          
           {{book.title}}
         </p>
       </mat-expansion-panel-header>
       <p>{{book.author}}</p>
+      <p>{{book.publication}}</p>
       <mat-action-row>
         <button mat-button color="accent" (click)="onDelete(post.id)">Delete</button>
       </mat-action-row>
@@ -15,10 +17,11 @@
     <mat-expansion-panel *ngFor="let book of favedBooks">
       <mat-expansion-panel-header>
         <p>
-          {{book.title}}
+          {{book.book.title}}
         </p>
       </mat-expansion-panel-header>
-      <p>{{book.author}}</p>
+      <p>{{book.book.author}}</p>
+      <p>{{book.book.publication}}</p>
       <mat-action-row>
         <button mat-button color="accent" (click)="onDelete(post.id)">Delete</button>
       </mat-action-row>

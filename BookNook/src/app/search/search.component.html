@@ -11,15 +11,14 @@
     </mat-form-field>
 
     <mat-form-field appearance="fill" id="searchBar">
-      <textarea matInput name="searchTerms" id="searchTerms" cols="70" rows="1" ngModel></textarea>
+      <input matInput type="text" name="searchTerms" id="searchTerms" cols="70" rows="0" (keyup.enter)="search(form)" ngModel>
     </mat-form-field>
 
     <!-- <button mat-raised-button color="primary" type="submit">
       search
     </button> -->
-    <mat-icon id="searchButton" (click)="search(form)">search</mat-icon>
+    <mat-icon id="searchButton"  (click)="search(form)">search</mat-icon>
   </form>
-
   <!-- <div id="searchResults">
     <div class="book">
       <img src="https://covers.openlibrary.org/b/id/240727-M.jpg" alt="Cover">

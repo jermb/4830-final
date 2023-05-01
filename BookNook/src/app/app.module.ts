@@ -11,6 +11,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input';
+import {MatCardModule} from '@angular/material/card';
 import { HttpClientModule } from '@angular/common/http';
 
 import { HeaderComponent } from './header/header.component';
@@ -36,6 +37,7 @@ import { BookListComponent } from './book-list/book-list.component';
     FormsModule,
     MatFormFieldModule,
     MatSelectModule,
+    MatCardModule,
     MatIconModule,
     MatInputModule,
     MatMenuModule,
