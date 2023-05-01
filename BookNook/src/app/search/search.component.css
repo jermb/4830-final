@@ -15,7 +15,7 @@ form {
   width: 150px;
   position: absolute;
   left: 30%;
-  top: 30%
+  top: 24%
 }
 
 #searchBar {
@@ -23,7 +23,7 @@ form {
   min-width: 400px;
   position: absolute;
   left: 40%;
-  top: 30%;
+  top: 24%;
 }
 
 #searchTerms {
@@ -36,7 +36,7 @@ form {
   font-size: 35pt;
   position: absolute;
   right: 29%;
-  top: 30.5%;
+  top: 24.5%;
 }
 
 #searchResults {
