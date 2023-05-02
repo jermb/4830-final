@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ElementRef, Renderer2 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserService } from '../user/user.service';
 import { Book } from '../book.model';
@@ -14,7 +14,7 @@ export class BookListComponent implements OnInit, OnDestroy{
   favedBooks: {book: Book, score?: number}[] = [];
   private bookSub: Subscription;
 
-  constructor(public userService: UserService){}
+  constructor(public userService: UserService, private elRef: ElementRef, private renderer: Renderer2){}
 
   async ngOnInit() {
     // this.userService.getBooks();
@@ -32,17 +32,25 @@ export class BookListComponent implements OnInit, OnDestroy{
 
   /***** Score *****/
 
-  score(id: string) {
+  score(id: string, score: number) {
+    this.userService.scoreFavorite(id, score);
+    this.scoreStyle(id, score);
+  }
 
+  scoreStyle(id: string, score: number) {
+    for (let i = 1; i < score + 1; i++) {
+      const icon = this.elRef.nativeElement.querySelector(`#star-${ id }-${ i }`);
+      this.renderer.setStyle(icon, 'color', 'yellow');
+    }
   }
 
   /***** Delete *****/
 
   deleteFavorite(id: string) {
-
+    this.userService.deleteFavorite(id);
   }
 
   deleteBookmark(id: string) {
-
+    this.userService.deleteBookmark(id);
   }
 }

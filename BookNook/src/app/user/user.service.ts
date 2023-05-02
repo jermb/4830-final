@@ -70,7 +70,7 @@ export class UserService {
 
   /***** Delete *****/
   deleteFavorite(id: string) {
-    this.http.delete(`${ this.url }favorites${ id }`).subscribe((
+    this.http.delete(`${ this.url }favorites/${ id }`).subscribe((
       )=>{
         const updatedFavs = this.favorites.filter(book => book.book.id !== id);
         this.favorites = updatedFavs;
@@ -79,7 +79,7 @@ export class UserService {
   }
 
   deleteBookmark(id: string) {
-    this.http.delete(`${ this.url }bookmarks${ id }`).subscribe((
+    this.http.delete(`${ this.url }bookmarks/${ id }`).subscribe((
       )=>{
         const updatedBookmarks = this.bookmarks.filter(book => book.id !== id);
         this.bookmarks = updatedBookmarks;
@@ -90,7 +90,7 @@ export class UserService {
 
   /***** Score *****/
   scoreFavorite(id:string, score: number) {
-    this.http.post(`${ this.url }favorites/score`, { id: id, score: score }).subscribe(() => {
+    this.http.post(`${ this.url }favorites/score`, { id: id, score: score }).subscribe((response) => {
 
     })
   }

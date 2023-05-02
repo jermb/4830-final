@@ -5,3 +5,7 @@ button{
     max-width: 600px;
 }
 
+.scoring mat-icon:hover {
+  cursor: pointer;
+  color:  orange !important;
+}

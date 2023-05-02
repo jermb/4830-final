@@ -10,7 +10,7 @@
       <p>{{book.publication}}</p>
       <div class="button">
       <mat-action-row>
-        <button mat-button color="accent" (click)="deleteBookmark(book.id)">Delete</button>
+        <button mat-button color="accent" (click)="deleteBookmark(book.id)"><mat-icon>delete</mat-icon></button>
       </mat-action-row>
     </div>
     </mat-expansion-panel>
@@ -24,9 +24,19 @@
       </mat-expansion-panel-header>
       <p>{{book.book.author}}</p>
       <p>{{book.book.publication}}</p>
+
+      <div class="scoring">
+        <mat-icon (click)="score(book.book.id, 1)" id="star-{{ book.book.id }}-1">star</mat-icon>
+        <mat-icon (click)="score(book.book.id, 2)" id="star-{{ book.book.id }}-2">star</mat-icon>
+        <mat-icon (click)="score(book.book.id, 3)" id="star-{{ book.book.id }}-3">star</mat-icon>
+        <mat-icon (click)="score(book.book.id, 4)" id="star-{{ book.book.id }}-4">star</mat-icon>
+        <mat-icon (click)="score(book.book.id, 5)" id="star-{{ book.book.id }}-5">star</mat-icon>
+        <span>{{ scoreStyle(book.book.id, book.score) }}</span>
+      </div>
+
       <div class="button">
       <mat-action-row>
-        <button mat-button color="accent" (click)="deleteFavorite(book.id)">Delete</button>
+        <button mat-button color="accent" (click)="deleteFavorite(book.book.id)"><mat-icon>delete</mat-icon></button>
       </mat-action-row>
     </div>
     </mat-expansion-panel>

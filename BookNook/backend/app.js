@@ -142,21 +142,46 @@ app.delete('/api/bookmarks/:id', (req, res) => {
   UserModel.findOneAndUpdate(
     { _id: userID },
     { $pull: {bookmarked: req.params.id }}
-  )
+  ).then(() => {
+    res.status(201).json({
+      message: "Book succefully deleted from bookmarks."
+    })
+  })
+  .catch(err => {
+    console.log("Could not delete book from bookmarks.", err);
+    res.status(500).json({ message: "Could not delete book from bookmarks." });
+  })
 });
 
 app.delete('/api/favorites/:id', (req, res) => {
+  console.log(req.params.id);
   UserModel.findOneAndUpdate(
     { _id: userID },
     { $pull: {favorited: {id: req.params.id }}}
-  )
+  ).then(() => {
+    res.status(201).json({
+      message: "Book succefully deleted from favorites."
+    })
+  })
+  .catch(err => {
+    console.log("Could not delete book from favorites.", err);
+    res.status(500).json({ message: "Could not delete book from favorites." });
+  })
 });
 
 app.post('/api/favorites/score', (req, res) => {
   UserModel.findOneAndUpdate(
-    { _id: userID, "favorited.book": req.body.id },
+    { _id: userID, "favorited.id": req.body.id },
     { $set: { "favorited.$.score": req.body.score }}
-  )
+  ).then(() => {
+    res.status(201).json({
+      message: "Book succefully scored."
+    })
+  })
+  .catch(err => {
+    console.log("Could not set book score.", err);
+    res.status(500).json({ message: "Could not set book score." });
+  })
 });
 
 
