@@ -2,6 +2,31 @@ import { Component, OnInit } from '@angular/core';
 import {NgForm} from '@angular/forms';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Userloginfo } from './userloginfo';
+import { AuthService } from '../authenticate/authenticate.service';
+
+
+@Component({
+  templateUrl: "./login.component.html",
+  styleUrls: ["./login.component.css"]
+})
+export class LoginComponent {
+  isLoading = false;
+
+  constructor(public authService: AuthService) {}
+
+  onLogin(form: NgForm) {
+    if (form.invalid) {
+      return;
+    }
+    this.isLoading = true;
+    this.authService.login(form.value.email, form.value.password);
+  }
+}
+
+/*import { Component, OnInit } from '@angular/core';
+import {NgForm} from '@angular/forms';
+import { FormBuilder, Validators, FormGroup } from '@angular/forms';
+import { Userloginfo } from './userloginfo';
 //import { AuthService } from '../auth.service';
 
 @Component({
@@ -60,4 +85,4 @@ export class LoginComponent implements OnInit{
     this.isLoading = true;
     this.userLoginfo.login(form.value.email, form.value.password);
   } */
-}
+// }

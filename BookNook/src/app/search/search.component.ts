@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, Renderer2 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Book } from '../book.model';
 import { UserService } from '../user/user.service';
@@ -11,8 +11,9 @@ import { UserService } from '../user/user.service';
 export class SearchComponent {
 
   books: Book[];
+  message: string = "";
 
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService, private elRef: ElementRef, private renderer: Renderer2) {}
 
   search(form: NgForm) {
     console.log("searching");
@@ -33,6 +34,7 @@ export class SearchComponent {
       }
 
       console.log(tempBooks[0].title);
+      this.message = `Returned ${tempBooks.length} results.`;
 
       this.books = [...tempBooks];
     })
@@ -40,16 +42,21 @@ export class SearchComponent {
       // handle any errors
       console.log("Search did not return any results.");
       console.log(error);
+      this.message = "Search did not return any results.";
     });
   }
 
 
   favorite(id: string) {
     this.userService.favorite(id);
+    const icon = this.elRef.nativeElement.querySelector(`#star-${id}`);
+    this.renderer.setStyle(icon, 'color', 'yellow');
   }
 
   bookmark(id: string) {
     this.userService.favorite(id);
+    const icon = this.elRef.nativeElement.querySelector(`#bookmark-${id}`);
+    this.renderer.setStyle(icon, 'color', 'blue');
   }
 
 

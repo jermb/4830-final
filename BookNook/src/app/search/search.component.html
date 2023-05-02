@@ -18,6 +18,11 @@
     </button> -->
     <mat-icon id="searchButton"  (click)="search(form)">search</mat-icon>
   </form>
+
+  <div id="messageBox">
+    {{ message }}
+  </div>
+
   <!-- <div id="searchResults">
     <div class="book">
       <img src="https://covers.openlibrary.org/b/id/240727-M.jpg" alt="Cover">
@@ -68,8 +73,8 @@
           <p>{{ book.publication }}</p>
         </div>
         <div class="bookButtons">
-          <mat-icon (click)="favorite(book.id)">star</mat-icon>
-          <mat-icon (click)="bookmark(book.id)">bookmark</mat-icon>
+          <mat-icon (click)="favorite(book.id)" id="star-{{ book.id }}">star</mat-icon>
+          <mat-icon (click)="bookmark(book.id)" id="bookmark-{{ book.id }}">bookmark</mat-icon>
         </div>
       </div>
     </div>

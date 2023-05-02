@@ -2,15 +2,17 @@
     <mat-expansion-panel *ngFor="let book of markedBooks">
       <mat-expansion-panel-header>
         <p>
-          
+
           {{book.title}}
         </p>
       </mat-expansion-panel-header>
       <p>{{book.author}}</p>
       <p>{{book.publication}}</p>
+      <div class="button">
       <mat-action-row>
-        <button mat-button color="accent" (click)="onDelete(post.id)">Delete</button>
+        <button mat-button color="accent" (click)="deleteBookmark(book.id)">Delete</button>
       </mat-action-row>
+    </div>
     </mat-expansion-panel>
   </mat-accordion>
   <mat-accordion multi="true" *ngIf="favedBooks.length > 0">
@@ -22,11 +24,14 @@
       </mat-expansion-panel-header>
       <p>{{book.book.author}}</p>
       <p>{{book.book.publication}}</p>
+      <div class="button">
       <mat-action-row>
-        <button mat-button color="accent" (click)="onDelete(post.id)">Delete</button>
+        <button mat-button color="accent" (click)="deleteFavorite(book.id)">Delete</button>
       </mat-action-row>
+    </div>
     </mat-expansion-panel>
   </mat-accordion>
+  <div class="Nocontent">
   <p class="info-text mat-body-1" *ngIf="markedBooks.length <= 0">No Bookmarked books to render</p>
   <p class="info-text mat-body-1" *ngIf="favedBooks.length <= 0">No Favorited books to render</p>
-  
+  </div>

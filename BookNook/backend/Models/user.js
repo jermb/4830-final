@@ -12,6 +12,6 @@ userSchema = mongoose.Schema({
 })
 
 //  Exports the schema to be used by app.js
-module.exports = mongoose.model('Post', userSchema)
+module.exports = mongoose.model('User', userSchema)
 
 

@@ -8,20 +8,10 @@ import { HttpClient } from '@angular/common/http';
 })
 export class UserService {
 
-  bookmarks: Book[] = [
-    // "OL45804W",
-    // "OL27448W"
-    // this.getBook("OL45804W"),
-    // this.getBook("OL27448W")
-    {title: "Title", author: "The Author", publication: 1977, id: "OL45804W"}
-  ];
-  favorites: {book: Book, score?: number}[] = [
-    // {book: this.getBook("OL45804W")},
-    // {book: this.getBook("OL27448W"), score: 3}
-    // {id:"OL45804W"},
-    // {id: "OL27448W", score: 3}
-    {book:{title: "Title", author: "The Author", publication: 1977, id: "OL45804W"}, score: 3}
-  ];
+  bookmarks: Book[] = [];
+  favorites: {book: Book, score?: number}[] = [];
+
+  private readonly url = "http://localhost:3000/api/";
 
   //  One Listener for both arrays
   private bookListener = new Subject<{bookmarks: Book[], favorites: {book: Book, score?: number}[]}>();
@@ -32,38 +22,36 @@ export class UserService {
     return this.bookListener.asObservable();
   }
 
-
-
-
   /***** Adds *****/
   async favorite(id: string) {
-    const book: Book = await this.getBook(id)
-    this.http.post<{message: string, bookID: string}>('http://localhost:3000/api/favorites', id).subscribe((response) => {
-      this.favorites.push({book:book});
-      this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
+    const book: Book = await this.getBook(id);
+    console.log(book);
+    this.http.post<{message: string}>(`${ this.url }favorites`, { id: id }).subscribe((response) => {
+      this.favorites.push({ book: book });
+      this.bookListener.next({ bookmarks: [...this.bookmarks], favorites: [...this.favorites] });
+      console.log(response.message);
     })
   }
 
   async bookmark(id: string) {
     const book: Book = await this.getBook(id)
-    this.http.post<{message: string, bookID: string}>('http://localhost:3000/api/bookmarks', id).subscribe((response) => {
+    this.http.post<{message: string}>(`${ this.url }bookmarks`, { id: id }).subscribe((response) => {
       this.bookmarks.push(book);
       this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
+      console.log(response.message);
     })
   }
 
 
-
-
-
-  /***** Post *****/
+  /***** Get *****/
   async getFavorites() {
-    await this.http.get<{message:string, favorited: {book: string, score?: number}[]}>(
-      'http://localhost:3000/api/favorites').subscribe(async (data)=> {
+    await this.http.get<{message:string, favorited: {id: string, score?: number}[]}>(
+      `${ this.url }favorites`).subscribe(async (data)=> {
         //  Converts each bookID into a Book object and maps them into the favorites array
         this.favorites = await Promise.all(data.favorited.map(async (item) => {
-          return {book: await this.getBook(item.book), score: item.score};
+          return {book: await this.getBook(item.id), score: item.score};
         }));
+        console.log(this.favorites);
         this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
     });
     return [...this.favorites];
@@ -71,7 +59,7 @@ export class UserService {
 
   async getBookmarks() {
     await this.http.get<{message:string, bookmarked: string[]}>(
-      'http://localhost:3000/api/bookmarks').subscribe(async (data)=> {
+      `${ this.url }bookmarks`).subscribe(async (data)=> {
         //  Converts each bookID into a Book object and stores them in the bookmarks array
         this.bookmarks = await Promise.all(data.bookmarked.map(bookID => this.getBook(bookID)));
         this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
@@ -79,8 +67,10 @@ export class UserService {
     return [...this.bookmarks];
   }
 
+
+  /***** Delete *****/
   deleteFavorite(id: string) {
-    this.http.delete("http://localhost:3000/api/favorites/"+id).subscribe((
+    this.http.delete(`${ this.url }favorites${ id }`).subscribe((
       )=>{
         const updatedFavs = this.favorites.filter(book => book.book.id !== id);
         this.favorites = updatedFavs;
@@ -89,7 +79,7 @@ export class UserService {
   }
 
   deleteBookmark(id: string) {
-    this.http.delete("http://localhost:3000/api/bookmarks/"+id).subscribe((
+    this.http.delete(`${ this.url }bookmarks${ id }`).subscribe((
       )=>{
         const updatedBookmarks = this.bookmarks.filter(book => book.id !== id);
         this.bookmarks = updatedBookmarks;
@@ -98,6 +88,12 @@ export class UserService {
   }
 
 
+  /***** Score *****/
+  scoreFavorite(id:string, score: number) {
+    this.http.post(`${ this.url }favorites/score`, { id: id, score: score }).subscribe(() => {
+
+    })
+  }
 
 
   //  Uses the open library api to get information on books from the book ids

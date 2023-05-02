@@ -18,14 +18,31 @@ export class BookListComponent implements OnInit, OnDestroy{
 
   async ngOnInit() {
     // this.userService.getBooks();
-    this.bookSub = this.userService.getBookUpdateListener().subscribe((list: {bookmarks: Book[], favorites: {book: Book, score?: number}[]})=>{
+    this.bookSub = this.userService.getBookUpdateListener().subscribe((list: {bookmarks: Book[], favorites: {book: Book, score?: number}[]}) => {
       this.markedBooks = list.bookmarks;
       this.favedBooks = list.favorites;
+      console.log(this.favedBooks);
     })
     this.markedBooks = await this.userService.getBookmarks();
     this.favedBooks = await this.userService.getFavorites();
   }
   ngOnDestroy() {
     this.bookSub.unsubscribe();
+  }
+
+  /***** Score *****/
+
+  score(id: string) {
+
+  }
+
+  /***** Delete *****/
+
+  deleteFavorite(id: string) {
+
+  }
+
+  deleteBookmark(id: string) {
+
   }
 }
