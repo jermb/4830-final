@@ -6,6 +6,8 @@ const User = require("../Models/user");
 
 const router = express.Router();
 
+// const userID = require('../userID').userID
+
 router.post("/signup", (req, res, next) => {
   bcrypt.hash(req.body.password, 10).then(hash => {
     const user = new User({
@@ -30,37 +32,48 @@ router.post("/signup", (req, res, next) => {
 
 router.post("/login", (req, res, next) => {
     let fetchedUser;
-    User.findOne({ email: req.body.email })
+    User.findOne({ username: req.body.email })
       .then(user => {
         if (!user) {
-          return res.status(401).json({
+          res.status(401).json({
             message: "Auth failed"
           });
+          return;
         }
         fetchedUser = user;
-        return bcrypt.compare(req.body.password, user.password);
+        return bcrypt.compare(req.body.password, user.password);;
       })
       .then(result => {
+        if (result == undefined) return;
         if (!result) {
-          return res.status(401).json({
+          res.status(401).json({
             message: "Auth failed"
           });
+          return;
         }
+        // userID.value = fetchedUser._id;
+        // console.log("UserID set to " + userID.value);
         const token = jwt.sign(
-          { email: fetchedUser.email, userId: fetchedUser._id },
+          { email: fetchedUser.username, userID: fetchedUser._id },
           "secret_this_should_be_longer",
           { expiresIn: "1h" }
         );
         res.status(200).json({
+          userID: fetchedUser._id,
           token: token,
           expiresIn: 3600
         });
       })
       .catch(err => {
-        return res.status(401).json({
+        console.log(err);
+        res.status(401).json({
           message: "Auth failed"
         });
       });
   });
+
+  router.post("/logout", (req, res) => {
+    userID.value = null;
+  })
 
   module.exports = router;

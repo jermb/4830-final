@@ -24,9 +24,12 @@ export class UserService {
 
   /***** Adds *****/
   async favorite(id: string) {
+    const token = localStorage.getItem("token");
+    if (token == null) return;
+
     const book: Book = await this.getBook(id);
     console.log(book);
-    this.http.post<{message: string}>(`${ this.url }favorites`, { id: id }).subscribe((response) => {
+    this.http.post<{message: string}>(`${ this.url }favorites/add`, { token: token, id: id }).subscribe((response) => {
       this.favorites.push({ book: book });
       this.bookListener.next({ bookmarks: [...this.bookmarks], favorites: [...this.favorites] });
       console.log(response.message);
@@ -34,8 +37,11 @@ export class UserService {
   }
 
   async bookmark(id: string) {
+    const token = localStorage.getItem("token");
+    if (token == null) return;
+
     const book: Book = await this.getBook(id)
-    this.http.post<{message: string}>(`${ this.url }bookmarks`, { id: id }).subscribe((response) => {
+    this.http.post<{message: string}>(`${ this.url }bookmarks/add`, { token: token, id: id }).subscribe((response) => {
       this.bookmarks.push(book);
       this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
       console.log(response.message);
@@ -45,8 +51,11 @@ export class UserService {
 
   /***** Get *****/
   async getFavorites() {
-    await this.http.get<{message:string, favorited: {id: string, score?: number}[]}>(
-      `${ this.url }favorites`).subscribe(async (data)=> {
+    const token = localStorage.getItem("token");
+    if (token == null) return;
+
+    await this.http.post<{message:string, favorited: {id: string, score?: number}[]}>(
+      `${ this.url }favorites`, { token: token }).subscribe(async (data)=> {
         //  Converts each bookID into a Book object and maps them into the favorites array
         this.favorites = await Promise.all(data.favorited.map(async (item) => {
           return {book: await this.getBook(item.id), score: item.score};
@@ -58,8 +67,12 @@ export class UserService {
   }
 
   async getBookmarks() {
-    await this.http.get<{message:string, bookmarked: string[]}>(
-      `${ this.url }bookmarks`).subscribe(async (data)=> {
+
+    const token = localStorage.getItem("token");
+    if (token == null) return;
+
+    await this.http.post<{message:string, bookmarked: string[]}>(
+      `${ this.url }bookmarks`, { token: token }).subscribe(async (data)=> {
         //  Converts each bookID into a Book object and stores them in the bookmarks array
         this.bookmarks = await Promise.all(data.bookmarked.map(bookID => this.getBook(bookID)));
         this.bookListener.next({bookmarks: [...this.bookmarks], favorites: [...this.favorites]});
@@ -70,7 +83,7 @@ export class UserService {
 
   /***** Delete *****/
   deleteFavorite(id: string) {
-    this.http.delete(`${ this.url }favorites/${ id }`).subscribe((
+    this.http.delete(`${ this.url }favorites/${ id }`, {body: { token: this.token() }}).subscribe((
       )=>{
         const updatedFavs = this.favorites.filter(book => book.book.id !== id);
         this.favorites = updatedFavs;
@@ -79,7 +92,7 @@ export class UserService {
   }
 
   deleteBookmark(id: string) {
-    this.http.delete(`${ this.url }bookmarks/${ id }`).subscribe((
+    this.http.delete(`${ this.url }bookmarks/${ id }`, { body: {token: this.token() }}).subscribe((
       )=>{
         const updatedBookmarks = this.bookmarks.filter(book => book.id !== id);
         this.bookmarks = updatedBookmarks;
@@ -124,6 +137,10 @@ export class UserService {
     });
     const book: Book = {title: title, author: author, publication: publication, id: id};
     return book;
+  }
+
+  private token() {
+    return localStorage.getItem("token");
   }
 
 }

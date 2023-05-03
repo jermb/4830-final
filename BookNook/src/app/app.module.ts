@@ -11,14 +11,18 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon'
 import { MatInputModule } from '@angular/material/input';
-import {MatCardModule} from '@angular/material/card';
+import { MatCardModule } from '@angular/material/card';
 import { HttpClientModule } from '@angular/common/http';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+
 
 import { HeaderComponent } from './header/header.component';
 import { FooterComponent } from './footer/footer.component';
 import { LoginComponent } from './login/login.component';
 import { SearchComponent } from './search/search.component';
 import { BookListComponent } from './book-list/book-list.component';
+import { AuthService } from './authenticate/authenticate.service';
+import { AuthGuard } from './authenticate/authenticate.guard';
 
 @NgModule({
   declarations: [
@@ -41,9 +45,10 @@ import { BookListComponent } from './book-list/book-list.component';
     MatIconModule,
     MatInputModule,
     MatMenuModule,
-    HttpClientModule
+    HttpClientModule,
+    MatProgressSpinnerModule
   ],
-  providers: [],
+  providers: [AuthService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

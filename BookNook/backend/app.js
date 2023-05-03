@@ -4,45 +4,22 @@ const UserModel = require('./Models/user');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose')
 const userRoutes = require('./routes/user');
+// const userID = require('./userID').userID
+const jwt = require("jsonwebtoken");
+
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended:false}));
 
-//  Connects to mongodb cluster using username and password
-//  user:<password>
 
-
+/**
+ * Connects to mongodb cluster using username and password
+ * user:<password>
+ */
 const password = "gNZ0vX9EgGfilTjB";
-var userID;
-
 mongoose.connect(`mongodb+srv://final:${ password }@4830-final.ah3izq5.mongodb.net/?retryWrites=true&w=majority`)
   .then(()=>{
     console.log('Connected to database')
-    // const user = new UserModel({
-    //   username: "jermb",
-    //   password: "password"
-    // })
-
-    // user.save().then((newuser) => {
-    //   console.log(newuser);
-    // })
-
-    //
-    UserModel.findOne({username: "jermb"}).then(user => {
-      console.log("finding user");
-      userID = user._id;
-      console.log("user id is " + userID);
-    })
-    // .then(() => {
-    //   UserModel.findOneAndUpdate(
-    //     {_id: userID},
-    //     {$addToSet: { favorited: {id: "OL45804W"}}}
-    //   ).then(() => {
-    //     console.log("added");
-    //   });
-    // })
-
-
   })
   .catch((err)=>{
     console.log('Connection error')
@@ -50,8 +27,22 @@ mongoose.connect(`mongodb+srv://final:${ password }@4830-final.ah3izq5.mongodb.n
   })
 
 
+const secret = "secret_this_should_be_longer";
+const userIDFunct = (token) => {
+  // verify token and get payload data
+  return jwt.verify(token, secret, (err, payload) => {
+    if (err) {
+        console.log('Invalid token');
+    } else {
+        return payload.userID;
+    }
+  });
+};
 
-//  Set up CORS
+
+/**
+ * Set up CORS
+ */
 app.use((req, res, next)=>{
   res.setHeader("Access-Control-Allow-Origin","*");
   res.setHeader(
@@ -64,29 +55,17 @@ app.use((req, res, next)=>{
   next();
 });
 
-/***************** Test Commands for adding user *****************/
-// const user = new UserModel({
-//   username: "jermb",
-//   password: "password"
-// })
 
-// user.save().then((newuser) => {
-//   console.log(newuser);
-// })
-
-
-
-/***************** End Test Commands for adding user *****************/
-
-
-//  Adds a post to the MongoDB database
-app.post("/api/bookmarks",(req,res)=>{
+/**
+ * Adds a bookID to the bookmarked list
+ */
+app.post("/api/bookmarks/add",(req,res)=>{
   UserModel.findOneAndUpdate(
-    { _id: userID },
-    { $addToSet: { bookmarked: req.body }}
+    { _id: userIDFunct(req.body.token) },
+    { $addToSet: { bookmarked: req.body.id }}
   ).then(() => {
     res.status(201).json({
-      message: "Book added to favorites successfully."
+      message: "Book added to bookmarks successfully."
     })
   })
   .catch(err => {
@@ -94,18 +73,14 @@ app.post("/api/bookmarks",(req,res)=>{
     res.status(500).json({ message: "Could not add book to bookmarks." });
   })
 });
-  // post.save().then(createPost => {
-  //   res.status(201).json({
-  //     message:'Post added successful',
-  //     postId: createPost._id
-  //   });
-  // })
-  // console.log(post)
-// });
 
-app.post("/api/favorites",(req,res)=>{
+
+/**
+ * Accepts BookID and adds it to favorited list.
+ */
+app.post("/api/favorites/add",(req,res)=>{
   UserModel.findOneAndUpdate(
-    { _id: userID },
+    { _id: userIDFunct(req.body.token) },
     { $addToSet: { favorited: { id: req.body.id }}}
   ).then(() => {
     console.log(req.body);
@@ -119,28 +94,42 @@ app.post("/api/favorites",(req,res)=>{
   });
 });
 
-//  Retrieves information from database
-app.get('/api/bookmarks', (req, res) => {
-  UserModel.findOne({ _id: userID }).then(document => {
+
+/**
+ * Returns the User's Bookmarked list from database
+ */
+app.post('/api/bookmarks', (req, res) => {
+  UserModel.findOne({ _id: userIDFunct(req.body.token) }).then(user => {
+    if (!user) return;
     res.status(200).json({
       message: "Bookmark List",
-      bookmarked: document.bookmarked
+      bookmarked: user.bookmarked
     })
   })
 });
 
-app.get('/api/favorites', (req, res) => {
-  UserModel.findOne({ _id: userID }).then(document => {
+
+/**
+ * Returns the User's Favorited list from database
+ */
+app.post('/api/favorites', (req, res) => {
+  UserModel.findOne({ _id: userIDFunct(req.body.token) }).then(user => {
+    if (!user) return;
     res.status(200).json({
       message: "Favorite List",
-      favorited: document.favorited
+      favorited: user.favorited
     })
   })
 });
 
+
+/**
+ * Accepts bookID as paramater in url
+ * Removes that book from the bookmarked list
+ */
 app.delete('/api/bookmarks/:id', (req, res) => {
   UserModel.findOneAndUpdate(
-    { _id: userID },
+    { _id: userIDFunct(req.body.token) },
     { $pull: {bookmarked: req.params.id }}
   ).then(() => {
     res.status(201).json({
@@ -153,10 +142,14 @@ app.delete('/api/bookmarks/:id', (req, res) => {
   })
 });
 
+
+/**
+ * Accepts bookID as paramater in url
+ * Removes that book/score object from the favorited list
+ */
 app.delete('/api/favorites/:id', (req, res) => {
-  console.log(req.params.id);
   UserModel.findOneAndUpdate(
-    { _id: userID },
+    { _id: userIDFunct(req.body.token) },
     { $pull: {favorited: {id: req.params.id }}}
   ).then(() => {
     res.status(201).json({
@@ -169,9 +162,14 @@ app.delete('/api/favorites/:id', (req, res) => {
   })
 });
 
+
+/**
+ * Accepts bookID[string] and score[number] as paramater in url
+ * Sets that bookID to have corresponding score in favorited list
+ */
 app.post('/api/favorites/score', (req, res) => {
   UserModel.findOneAndUpdate(
-    { _id: userID, "favorited.id": req.body.id },
+    { _id: userID.value, "favorited.id": req.body.id },
     { $set: { "favorited.$.score": req.body.score }}
   ).then(() => {
     res.status(201).json({
@@ -185,6 +183,9 @@ app.post('/api/favorites/score', (req, res) => {
 });
 
 
+/**
+ * Adds Login stuff to express
+ */
 app.use("/api/user", userRoutes);
 
 module.exports = app;

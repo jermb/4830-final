@@ -3,6 +3,7 @@ import { RouterModule, Routes } from '@angular/router';
 import { SearchComponent } from './search/search.component';
 import { LoginComponent } from './login/login.component';
 import { BookListComponent } from './book-list/book-list.component';
+import { AuthService } from './authenticate/authenticate.service';
 
 const routes: Routes = [
   {
@@ -18,7 +19,8 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
+  providers: [AuthService]
 })
 export class AppRoutingModule { }
 

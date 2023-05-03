@@ -1,5 +1,5 @@
 <!--
-  This was the older header 
+  This was the older header
   ----------------------------
 <mat-toolbar color="primary">
   <span>
@@ -14,12 +14,11 @@
 </mat-toolbar>
 -->
 <mat-toolbar color="primary">
-  <mat-toolbar-row>BookNook Book Storage Service</mat-toolbar-row>  
+  <mat-toolbar-row>BookNook Book Storage Service</mat-toolbar-row>
   <mat-toolbar-row>
-    <a href="">Home</a>
+    <a href="#">Home</a>
     <a href="login" *ngIf="!userIsAuthenticated">Login</a>
+    <a href="#" (click)="logout()" *ngIf="userIsAuthenticated">Logout</a>
     <a href="list">List</a>
   </mat-toolbar-row>
-
-
 </mat-toolbar>

@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { Subject } from "rxjs";
 
 import { Authdata } from "./data.model";
+import { UserID, userID } from "./userID"
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -11,14 +12,18 @@ export class AuthService {
   private token: string;
   private tokenTimer: any;
   private authStatusListener = new Subject<boolean>();
+  private userID: UserID = userID;
 
-  constructor(private http: HttpClient, private router: Router) {}
+  constructor(private http: HttpClient, private router: Router) {
+    console.log("new auth service");
+  }
 
   getToken() {
     return this.token;
   }
 
   getIsAuth() {
+    this.autoAuthUser();
     return this.isAuthenticated;
   }
 
@@ -35,14 +40,15 @@ export class AuthService {
       });
   }
 
-  login(email: string, password: string) {
+  async login(email: string, password: string) {
     const authData: Authdata = { email: email, password: password };
-    this.http
-      .post<{ token: string; expiresIn: number }>(
+    await this.http
+      .post<{ userID: string, token: string; expiresIn: number }>(
         "http://localhost:3000/api/user/login",
         authData
       )
       .subscribe(response => {
+        console.log("hello");
         const token = response.token;
         this.token = token;
         if (token) {
@@ -54,7 +60,10 @@ export class AuthService {
           const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
           console.log(expirationDate);
           this.saveAuthData(token, expirationDate);
-          this.router.navigate(["/"]);
+          this.userID.value = response.userID;
+          console.log("userid = " + this.userID.value);
+          console.log(this.isAuthenticated);
+          this.router.navigate(["/list"]);
         }
       });
   }

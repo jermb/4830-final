@@ -12,10 +12,6 @@
       <mat-label>Enter Search</mat-label>
       <input matInput type="text" name="searchTerms" id="searchTerms" cols="70" rows="0" (keyup.enter)="search(form)" ngModel>
     </mat-form-field>
-
-    <!-- <button mat-raised-button color="primary" type="submit">
-      search
-    </button> -->
     <mat-icon id="searchButton"  (click)="search(form)">search</mat-icon>
   </form>
 
@@ -23,61 +19,29 @@
     {{ message }}
   </div>
 
-  <!-- <div id="searchResults">
-    <div class="book">
-      <img src="https://covers.openlibrary.org/b/id/240727-M.jpg" alt="Cover">
-      <div class="bookInfo">
-        <h2>Title</h2>
-        <p>Author</p>
-        <p>Publication</p>
-      </div>
-      <div class="bookButtons">
-        <mat-icon (click)="favorite('hello')">star</mat-icon>
-        <mat-icon (click)="bookmark('hello')">bookmark</mat-icon>
-      </div>
-    </div>
-    <div class="book">
-      <img src="https://covers.openlibrary.org/b/id/240727-M.jpg" alt="Cover">
-      <div class="bookInfo">
-        <h2>Title</h2>
-        <p>Author</p>
-        <p>Publication</p>
-      </div>
-      <div class="bookButtons">
-        <mat-icon (click)="favorite('hello')">star</mat-icon>
-        <mat-icon (click)="bookmark('hello')">bookmark</mat-icon>
-      </div>
-    </div>
-    <div class="book">
-      <img src="https://covers.openlibrary.org/b/id/240727-M.jpg" alt="Cover">
-      <div class="bookInfo">
-        <h2>Title</h2>
-        <p>Author</p>
-        <p>Publication</p>
-      </div>
-      <div class="bookButtons">
-        <mat-icon (click)="favorite('hello')">star</mat-icon>
-        <mat-icon (click)="bookmark('hello')">bookmark</mat-icon>
-      </div>
-    </div>
-  </div> -->
-
-
   <div id="searchResults">
-    <div *ngFor="let book of books">
-      <div class="book">
-        <img src="https://covers.openlibrary.org/b/olid/{{ book.id }}-M.jpg" alt="{{ book.title }} Cover">
-        <div class="bookInfo">
-          <h2>{{ book.title }}</h2>
-          <p>{{ book.author }}</p>
-          <p>{{ book.publication }}</p>
-        </div>
-        <div class="bookButtons">
-          <mat-icon (click)="favorite(book.id)" id="star-{{ book.id }}">star</mat-icon>
-          <mat-icon (click)="bookmark(book.id)" id="bookmark-{{ book.id }}">bookmark</mat-icon>
+
+    <div *ngIf="loading">
+      <mat-progress-spinner class="spinner" color="accent" mode="indeterminate"/>
+    </div>
+
+    <div *ngIf="!loading">
+      <div *ngFor="let book of books">
+        <div class="book">
+          <img src="https://covers.openlibrary.org/b/olid/{{ book.id }}-M.jpg" alt="{{ book.title }} Cover">
+          <div class="bookInfo">
+            <h2>{{ book.title }}</h2>
+            <p>{{ book.author }}</p>
+            <p>{{ book.publication }}</p>
+          </div>
+          <div class="bookButtons" *ngIf="loggedIn">
+            <mat-icon (click)="favorite(book.id)" id="star-{{ book.id }}">star</mat-icon>
+            <mat-icon (click)="bookmark(book.id)" id="bookmark-{{ book.id }}">bookmark</mat-icon>
+          </div>
         </div>
       </div>
     </div>
+
   </div>
 </div>
 

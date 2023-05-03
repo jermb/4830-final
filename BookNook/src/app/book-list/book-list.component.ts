@@ -1,7 +1,10 @@
 import { Component, OnInit, OnDestroy, ElementRef, Renderer2 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { UserService } from '../user/user.service';
+import { AuthService } from '../authenticate/authenticate.service';
 import { Book } from '../book.model';
+import { Router } from '@angular/router';
+import { AuthGuard } from '../authenticate/authenticate.guard';
 
 
 @Component({
@@ -14,19 +17,35 @@ export class BookListComponent implements OnInit, OnDestroy{
   favedBooks: {book: Book, score?: number}[] = [];
   private bookSub: Subscription;
 
-  constructor(public userService: UserService, private elRef: ElementRef, private renderer: Renderer2){}
+  bookmarkLoading: boolean = false;
+  favoriteLoading: boolean = false;
+
+  constructor(public userService: UserService, private auth: AuthService, private elRef: ElementRef, private renderer: Renderer2, private router: Router){}
 
   async ngOnInit() {
+
+    console.log(this.auth.getIsAuth());
+    // this.auth.autoAuthUser();
+    if (!this.auth.getIsAuth()) {
+      this.router.navigate(["/login"]);
+      return;
+    }
+
     // this.userService.getBooks();
     this.bookSub = this.userService.getBookUpdateListener().subscribe((list: {bookmarks: Book[], favorites: {book: Book, score?: number}[]}) => {
       this.markedBooks = list.bookmarks;
       this.favedBooks = list.favorites;
       console.log(this.favedBooks);
     })
+    this.bookmarkLoading = true;
+    this.favoriteLoading = true;
     this.markedBooks = await this.userService.getBookmarks();
+    this.bookmarkLoading = false;
     this.favedBooks = await this.userService.getFavorites();
+    this.favoriteLoading = false;
   }
   ngOnDestroy() {
+    if (this.bookSub == null) return;
     this.bookSub.unsubscribe();
   }
 

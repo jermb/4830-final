@@ -2,6 +2,7 @@ import { Component, ElementRef, Renderer2 } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Book } from '../book.model';
 import { UserService } from '../user/user.service';
+import { AuthService } from '../authenticate/authenticate.service';
 
 @Component({
   selector: 'app-search',
@@ -12,11 +13,16 @@ export class SearchComponent {
 
   books: Book[];
   message: string = "";
+  loggedIn: boolean;
+  loading: boolean = false;
 
-  constructor(private userService: UserService, private elRef: ElementRef, private renderer: Renderer2) {}
+  constructor(private userService: UserService, private elRef: ElementRef, private renderer: Renderer2, private auth: AuthService) {
+    this.loggedIn = auth.getIsAuth();
+  }
 
   search(form: NgForm) {
-    console.log("searching");
+    this.message = "";
+    this.loading = true;
     fetch(`https://openlibrary.org/search.json?${ form.value.searchType }=${ this.urlize(form.value.searchTerms) }`)
     .then(response => response.json())
     .then(data => {
@@ -43,6 +49,9 @@ export class SearchComponent {
       console.log("Search did not return any results.");
       console.log(error);
       this.message = "Search did not return any results.";
+    })
+    .finally(() => {
+      this.loading = false;
     });
   }
 
@@ -54,7 +63,7 @@ export class SearchComponent {
   }
 
   bookmark(id: string) {
-    this.userService.favorite(id);
+    this.userService.bookmark(id);
     const icon = this.elRef.nativeElement.querySelector(`#bookmark-${id}`);
     this.renderer.setStyle(icon, 'color', 'blue');
   }

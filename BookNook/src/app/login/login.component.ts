@@ -3,6 +3,7 @@ import {NgForm} from '@angular/forms';
 import { FormBuilder, Validators, FormGroup } from '@angular/forms';
 import { Userloginfo } from './userloginfo';
 import { AuthService } from '../authenticate/authenticate.service';
+import { AuthGuard } from '../authenticate/authenticate.guard';
 
 
 @Component({
@@ -12,14 +13,14 @@ import { AuthService } from '../authenticate/authenticate.service';
 export class LoginComponent {
   isLoading = false;
 
-  constructor(public authService: AuthService) {}
+  constructor(public auth: AuthService) {}
 
   onLogin(form: NgForm) {
     if (form.invalid) {
       return;
     }
     this.isLoading = true;
-    this.authService.login(form.value.email, form.value.password);
+    this.auth.login(form.value.username, form.value.password);
   }
 }
 

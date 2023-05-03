@@ -11,7 +11,7 @@ import {
 
   @Injectable()
   export class AuthGuard implements CanActivate {
-    constructor(private authService: AuthService, private router: Router) {}
+    constructor(public authService: AuthService, private router: Router) {}
 
     canActivate(
       route: ActivatedRouteSnapshot,
@@ -22,5 +22,9 @@ import {
         this.router.navigate(['/login']);
       }
       return isAuth;
+    }
+
+    getIsAuth() {
+      return this.authService.getIsAuth();
     }
   }

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Subscription } from "rxjs";
 import { Userloginfo } from '../login/userloginfo';
 import {MatMenuModule} from '@angular/material/menu';
+import { AuthService } from '../authenticate/authenticate.service';
 
 @Component({
   selector: 'app-header',
@@ -13,10 +14,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
   private authListenerSubs: Subscription;
 
   //constructor(private Userloginfo: Userloginfo) {}
-  constructor() {
-  
+  constructor(private auth: AuthService) {
+
   }
   ngOnInit() {
+    this.userIsAuthenticated = this.auth.getIsAuth();
+    console.log(this.userIsAuthenticated);
+
     /*
     this.userIsAuthenticated = this.Userloginfo.getIsAuth();
     this.authListenerSubs = this.Userloginfo
@@ -29,5 +33,9 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
   ngOnDestroy() {
     this.authListenerSubs.unsubscribe();
+  }
+
+  logout() {
+    this.auth.logout();
   }
 }
