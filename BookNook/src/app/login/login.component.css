@@ -37,3 +37,8 @@ mat-form-field {
 button {
   width: 50%;
 }
+
+#errorMsg {
+  color: #F34336;
+  height: 1em;
+}

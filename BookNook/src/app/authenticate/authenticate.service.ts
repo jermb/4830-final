@@ -35,18 +35,18 @@ export class AuthService {
       .post("http://localhost:3000/api/user/signup", authData)
       .subscribe(response => {
         console.log(response);
-      });
+    });
   }
 
   async login(email: string, password: string) {
     const authData: Authdata = { email: email, password: password };
+    var authed:boolean;
     await this.http
-      .post<{ userID: string, token: string; expiresIn: number }>(
+      .post<{ message: string, token: string; expiresIn: number }>(
         "http://localhost:3000/api/user/login",
         authData
       )
       .subscribe(response => {
-        console.log("hello");
         const token = response.token;
         this.token = token;
         if (token) {
@@ -59,8 +59,13 @@ export class AuthService {
           console.log(expirationDate);
           this.saveAuthData(token, expirationDate);
           this.router.navigate(["/list"]);
+          authed = true;
         }
+      },
+      error => {
+        authed = false
       });
+      return authed;
   }
 
   autoAuthUser() {

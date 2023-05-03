@@ -2,6 +2,7 @@
     <h1>Login</h1>
     <mat-spinner *ngIf="isLoading"></mat-spinner>
     <form (submit)="onLogin(loginForm)" #loginForm="ngForm" *ngIf="!isLoading">
+        <p id="errorMsg">{{ errorMsg }}</p>
         <mat-form-field>
           <input matInput name="username" ngModel type="username" placeholder="Username" #usernameInput="ngModel" required username>
           <mat-error *ngIf="usernameInput.invalid">Please enter a valid username</mat-error>

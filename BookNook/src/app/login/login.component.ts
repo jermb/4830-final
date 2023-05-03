@@ -12,15 +12,31 @@ import { AuthGuard } from '../authenticate/authenticate.guard';
 })
 export class LoginComponent {
   isLoading = false;
+  errorMsg = ""
 
   constructor(public auth: AuthService) {}
 
-  onLogin(form: NgForm) {
+  async onLogin(form: NgForm) {
     if (form.invalid) {
       return;
     }
     this.isLoading = true;
-    this.auth.login(form.value.username, form.value.password);
+
+    // if (!this.auth.login(form.value.username, form.value.password)) {
+    //   this.isLoading = false;
+    // }
+
+    const authed = await this.auth.login(form.value.username, form.value.password)
+    this.isLoading = false;
+
+    console.log(authed);
+
+    if (!authed) {
+      this.errorMsg = "Username or password is incorrect.";
+    }
+    else {
+      this.errorMsg = "";
+    }
   }
 }
 

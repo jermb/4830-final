@@ -60,6 +60,7 @@ form {
 
 #searchResults {
   height: 600px;
+  margin-top: 15px;
   overflow-y: scroll;
 }
 
@@ -68,17 +69,20 @@ form {
   flex-direction: row;
   background-color: gray;
   width: 70%;
-  height: 10%;
+  /* height: 10%; */
+  height: 150px;
   max-height: 10%;
-  justify-content: space-around;
+  justify-content: space-evenly;
   padding: 15px;
   border-radius:15px;
   margin: 1% auto;
+  box-shadow: 5px 5px 10px black;
 }
 
 .book img {
   height: 100%;
   width: auto;
+  max-width: 30%;
 }
 
 .bookInfo {

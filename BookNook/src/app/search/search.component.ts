@@ -32,7 +32,8 @@ export class SearchComponent {
 
       for (var item in docs) {
         item = docs[item];
-        const key = item["key"].replace("/works/", "");
+        const key = (item["cover_edition_key"] != null) ? item["cover_edition_key"] : item["key"].replace("/works/", "");
+        // if (item["cover_edition"] != null) key = item["cover_edition"];
         const book: Book = { title: item["title"], author: item["author_name"], publication: item["first_publish_year"], id: key };
         tempBooks.push(book);
       }

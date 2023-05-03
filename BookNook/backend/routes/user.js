@@ -34,10 +34,13 @@ router.post("/signup", (req, res, next) => {
  * Then checks the given password against hashed password stored in database.
  */
 router.post("/login", (req, res, next) => {
+  console.log("login try");
     let fetchedUser;
     User.findOne({ username: req.body.email })
       .then(user => {
         if (!user) {
+          throw new Error("Auth failed");
+          console.log(user);
           res.status(401).json({
             message: "Auth failed"
           });
@@ -47,8 +50,9 @@ router.post("/login", (req, res, next) => {
         return bcrypt.compare(req.body.password, user.password);;
       })
       .then(result => {
-        if (result == undefined) return;
+        if (result == null) return;
         if (!result) {
+          throw new Error("Auth failed");
           res.status(401).json({
             message: "Auth failed"
           });
@@ -60,7 +64,7 @@ router.post("/login", (req, res, next) => {
           { expiresIn: "1h" }
         );
         res.status(200).json({
-          userID: fetchedUser._id,
+          message: "Auth Success",
           token: token,
           expiresIn: 3600
         });
