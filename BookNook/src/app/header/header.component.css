@@ -1,5 +1,11 @@
 a {
     padding: 0px 10px;
     font-size: 20pt;
-    color: yellow;
+    color: #68F0AE;
+}
+
+mat-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }

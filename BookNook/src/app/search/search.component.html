@@ -1,3 +1,8 @@
+
+<div id="messageBox">
+  {{ message }}
+</div>
+
 <div id="searchBody">
   <form #form="ngForm">
     <mat-form-field appearance="fill" id="searchTypeSelect">
@@ -15,9 +20,6 @@
     <mat-icon id="searchButton"  (click)="search(form)">search</mat-icon>
   </form>
 
-  <div id="messageBox">
-    {{ message }}
-  </div>
 
   <div id="searchResults">
 
@@ -34,9 +36,11 @@
             <p>{{ book.author }}</p>
             <p>{{ book.publication }}</p>
           </div>
-          <div class="bookButtons" *ngIf="loggedIn">
-            <mat-icon (click)="favorite(book.id)" id="star-{{ book.id }}">star</mat-icon>
-            <mat-icon (click)="bookmark(book.id)" id="bookmark-{{ book.id }}">bookmark</mat-icon>
+          <div *ngIf="loggedIn">
+            <div class="bookButtons">
+              <mat-icon (click)="favorite(book.id)" id="star-{{ book.id }}" title="Add to favorites">star</mat-icon>
+              <mat-icon (click)="bookmark(book.id)" id="bookmark-{{ book.id }}" title="Add to Read Later">bookmark</mat-icon>
+            </div>
           </div>
         </div>
       </div>

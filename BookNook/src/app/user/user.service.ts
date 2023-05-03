@@ -103,8 +103,8 @@ export class UserService {
 
   /***** Score *****/
   scoreFavorite(id:string, score: number) {
-    this.http.post(`${ this.url }favorites/score`, { id: id, score: score }).subscribe((response) => {
-
+    this.http.post<{ message: string }>(`${ this.url }favorites/score`, { id: id, score: score }).subscribe((response) => {
+      console.log(response.message);
     })
   }
 

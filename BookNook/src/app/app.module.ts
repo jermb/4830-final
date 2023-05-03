@@ -14,6 +14,8 @@ import { MatInputModule } from '@angular/material/input';
 import { MatCardModule } from '@angular/material/card';
 import { HttpClientModule } from '@angular/common/http';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {MatButtonModule} from '@angular/material/button';
+
 
 
 import { HeaderComponent } from './header/header.component';
@@ -46,7 +48,8 @@ import { AuthGuard } from './authenticate/authenticate.guard';
     MatInputModule,
     MatMenuModule,
     HttpClientModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatButtonModule
   ],
   providers: [AuthService],
   bootstrap: [AppComponent]
