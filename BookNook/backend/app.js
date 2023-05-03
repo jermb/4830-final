@@ -4,7 +4,6 @@ const UserModel = require('./Models/user');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose')
 const userRoutes = require('./routes/user');
-// const userID = require('./userID').userID
 const jwt = require("jsonwebtoken");
 
 

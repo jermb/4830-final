@@ -6,8 +6,6 @@ const User = require("../Models/user");
 
 const router = express.Router();
 
-// const userID = require('../userID').userID
-
 router.post("/signup", (req, res, next) => {
   bcrypt.hash(req.body.password, 10).then(hash => {
     const user = new User({
@@ -30,6 +28,11 @@ router.post("/signup", (req, res, next) => {
   });
 });
 
+
+/**
+ * Finds the user with the given username
+ * Then checks the given password against hashed password stored in database.
+ */
 router.post("/login", (req, res, next) => {
     let fetchedUser;
     User.findOne({ username: req.body.email })
@@ -51,8 +54,6 @@ router.post("/login", (req, res, next) => {
           });
           return;
         }
-        // userID.value = fetchedUser._id;
-        // console.log("UserID set to " + userID.value);
         const token = jwt.sign(
           { email: fetchedUser.username, userID: fetchedUser._id },
           "secret_this_should_be_longer",

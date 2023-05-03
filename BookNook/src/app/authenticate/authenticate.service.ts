@@ -4,7 +4,6 @@ import { Router } from "@angular/router";
 import { Subject } from "rxjs";
 
 import { Authdata } from "./data.model";
-import { UserID, userID } from "./userID"
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -12,7 +11,6 @@ export class AuthService {
   private token: string;
   private tokenTimer: any;
   private authStatusListener = new Subject<boolean>();
-  private userID: UserID = userID;
 
   constructor(private http: HttpClient, private router: Router) {
     console.log("new auth service");
@@ -60,9 +58,6 @@ export class AuthService {
           const expirationDate = new Date(now.getTime() + expiresInDuration * 1000);
           console.log(expirationDate);
           this.saveAuthData(token, expirationDate);
-          this.userID.value = response.userID;
-          console.log("userid = " + this.userID.value);
-          console.log(this.isAuthenticated);
           this.router.navigate(["/list"]);
         }
       });

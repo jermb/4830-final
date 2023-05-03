@@ -1,4 +1,5 @@
 <div id="bookmarks">
+  <h2>Read Later:</h2>
   <div *ngIf="bookmarkLoading">
     <mat-progress-spinner class="spinner" color="accent" mode="indeterminate"/>
   </div>
@@ -27,6 +28,7 @@
 </div>
 
 <div id="favorites">
+  <h2>Favorites:</h2>
   <div *ngIf="favoriteLoading">
     <mat-progress-spinner class="spinner" color="accent" mode="indeterminate"/>
   </div>

@@ -20,28 +20,24 @@ export class SearchComponent {
     this.loggedIn = auth.getIsAuth();
   }
 
+
   search(form: NgForm) {
     this.message = "";
     this.loading = true;
     fetch(`https://openlibrary.org/search.json?${ form.value.searchType }=${ this.urlize(form.value.searchTerms) }`)
     .then(response => response.json())
     .then(data => {
-      var docs = data["docs"];
-      var tempBooks: Book[] = [];
-      // console.log(docs[0])
+      const docs = data["docs"];
+      const tempBooks: Book[] = [];
 
       for (var item in docs) {
         item = docs[item];
         const key = item["key"].replace("/works/", "");
         const book: Book = { title: item["title"], author: item["author_name"], publication: item["first_publish_year"], id: key };
-        console.log(item);
-        console.log(book);
         tempBooks.push(book);
       }
 
-      console.log(tempBooks[0].title);
       this.message = `Returned ${tempBooks.length} results.`;
-
       this.books = [...tempBooks];
     })
     .catch(error => {
@@ -57,18 +53,28 @@ export class SearchComponent {
 
 
   favorite(id: string) {
+    //  Passes on favoriting duty to UserService
     this.userService.favorite(id);
+    //  Colors the star icon yellow
     const icon = this.elRef.nativeElement.querySelector(`#star-${id}`);
     this.renderer.setStyle(icon, 'color', 'yellow');
   }
 
+
   bookmark(id: string) {
+    //  Passes on favoriting duty to UserService
     this.userService.bookmark(id);
+    //  Colors the bookmark icon blue
     const icon = this.elRef.nativeElement.querySelector(`#bookmark-${id}`);
     this.renderer.setStyle(icon, 'color', 'blue');
   }
 
-
+  /**
+   * Prepares text from form for being sent in a URL
+   *
+   * @param text string
+   * @returns string
+   */
   private urlize(text: string) {
     var term = "";
     text.split(" ").forEach(word => {

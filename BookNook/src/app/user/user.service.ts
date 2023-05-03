@@ -119,7 +119,8 @@ export class UserService {
     .then(data => {
       title = data["title"];
       var author_key = data["authors"][0]["author"]["key"]
-      publication = new Date(data["publish_date"]).getFullYear();
+      publication = new Date(data["first_publish_date"]).getFullYear();
+      if (Number.isNaN(publication)) publication = new Date(data["publish_date"]).getFullYear();
       console.log(title);
 
       //  Uses the author_key to make another api call to get the author name.
