@@ -40,7 +40,7 @@ export class AuthService {
 
   async login(email: string, password: string) {
     const authData: Authdata = { email: email, password: password };
-    var authed:boolean;
+    var authed:boolean = false;
     await this.http
       .post<{ message: string, token: string; expiresIn: number }>(
         "http://localhost:3000/api/user/login",

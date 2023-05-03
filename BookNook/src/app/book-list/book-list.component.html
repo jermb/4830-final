@@ -7,19 +7,23 @@
   <div *ngIf="!bookmarkLoading">
     <mat-accordion multi="true" *ngIf="markedBooks.length > 0">
       <mat-expansion-panel *ngFor="let book of markedBooks">
-        <mat-expansion-panel-header>
-          <p>
+        <div class="tbr">
+          <div class="bookdetail">
+            <mat-expansion-panel-header>
+              <p>
 
-            {{book.title}}
-          </p>
-        </mat-expansion-panel-header>
-        <p>{{book.author}}</p>
-        <p>{{book.publication}}</p>
-        <div class="button">
-        <mat-action-row>
-          <button mat-button color="accent" (click)="deleteBookmark(book.id)"><mat-icon>delete</mat-icon></button>
-        </mat-action-row>
-      </div>
+                {{book.title}}
+              </p>
+            </mat-expansion-panel-header>
+            <p>{{book.author}}</p>
+            <p>{{book.publication}}</p>
+          </div>
+          <div class="button">
+            <mat-action-row>
+              <button mat-button color="accent" (click)="deleteBookmark(book.id)"><mat-icon>delete</mat-icon></button>
+            </mat-action-row>
+          </div>
+        </div>
       </mat-expansion-panel>
     </mat-accordion>
 
@@ -27,7 +31,7 @@
   </div>
 </div>
 
-<div id="favorites">
+<div id="bookmarks">
   <h2>Favorites:</h2>
   <div *ngIf="favoriteLoading">
     <mat-progress-spinner class="spinner" color="accent" mode="indeterminate"/>
@@ -36,28 +40,30 @@
   <div *ngIf="!favoriteLoading">
     <mat-accordion multi="true" *ngIf="favedBooks.length > 0">
       <mat-expansion-panel *ngFor="let book of favedBooks">
-        <mat-expansion-panel-header>
-          <p>
-            {{book.book.title}}
-          </p>
-        </mat-expansion-panel-header>
-        <p>{{book.book.author}}</p>
-        <p>{{book.book.publication}}</p>
-
-        <div class="scoring">
-          <mat-icon (click)="score(book.book.id, 1)" id="star-{{ book.book.id }}-1">star</mat-icon>
-          <mat-icon (click)="score(book.book.id, 2)" id="star-{{ book.book.id }}-2">star</mat-icon>
-          <mat-icon (click)="score(book.book.id, 3)" id="star-{{ book.book.id }}-3">star</mat-icon>
-          <mat-icon (click)="score(book.book.id, 4)" id="star-{{ book.book.id }}-4">star</mat-icon>
-          <mat-icon (click)="score(book.book.id, 5)" id="star-{{ book.book.id }}-5">star</mat-icon>
-          <span>{{ scoreStyle(book.book.id, book.score) }}</span>
+        <div class="tbr">
+          <div class="bookdetail">
+            <mat-expansion-panel-header>
+              <p>
+                {{book.book.title}}
+              </p>
+            </mat-expansion-panel-header>
+            <p>{{book.book.author}}</p>
+            <p>{{book.book.publication}}</p>
+          </div>
+          <div class="scoring">
+            <mat-icon (click)="score(book.book.id, 1)" id="star-{{ book.book.id }}-1">star</mat-icon>
+            <mat-icon (click)="score(book.book.id, 2)" id="star-{{ book.book.id }}-2">star</mat-icon>
+            <mat-icon (click)="score(book.book.id, 3)" id="star-{{ book.book.id }}-3">star</mat-icon>
+            <mat-icon (click)="score(book.book.id, 4)" id="star-{{ book.book.id }}-4">star</mat-icon>
+            <mat-icon (click)="score(book.book.id, 5)" id="star-{{ book.book.id }}-5">star</mat-icon>
+            <span>{{ scoreStyle(book.book.id, book.score) }}</span>
+          </div>
+          <div class="button">
+            <mat-action-row>
+              <button mat-button color="accent" (click)="deleteFavorite(book.book.id)"><mat-icon>delete</mat-icon></button>
+            </mat-action-row>
+          </div>
         </div>
-
-        <div class="button">
-        <mat-action-row>
-          <button mat-button color="accent" (click)="deleteFavorite(book.book.id)"><mat-icon>delete</mat-icon></button>
-        </mat-action-row>
-      </div>
       </mat-expansion-panel>
     </mat-accordion>
 

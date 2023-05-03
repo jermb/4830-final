@@ -60,6 +60,7 @@ form {
 
 #searchResults {
   height: 600px;
+  width: 60%;
   margin-top: 15px;
   overflow-y: scroll;
 }
@@ -75,14 +76,21 @@ form {
   justify-content: space-evenly;
   padding: 15px;
   border-radius:15px;
-  margin: 1% auto;
-  box-shadow: 5px 5px 10px black;
+  margin: 2% auto;
+  box-shadow: 0 0  10px #1f1f1f;
 }
 
-.book img {
+.book .img img {
   height: 100%;
-  width: auto;
-  max-width: 30%;
+  margin: auto;
+  /* width: 30%; */
+  /* max-width: 30%; */
+}
+
+.img {
+  height: 100%;
+  width: 30%;
+  text-align: center;
 }
 
 .bookInfo {
@@ -113,4 +121,8 @@ form {
   width: 100%;
   text-align: center;
   margin-top: 10%;
+}
+
+mat-progress-spinner {
+  margin: 50px auto;
 }

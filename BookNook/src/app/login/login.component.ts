@@ -29,9 +29,10 @@ export class LoginComponent {
     const authed = await this.auth.login(form.value.username, form.value.password)
     this.isLoading = false;
 
-    console.log(authed);
 
-    if (!authed) {
+    console.log(authed.valueOf());
+
+    if (!authed.valueOf()) {
       this.errorMsg = "Username or password is incorrect.";
     }
     else {

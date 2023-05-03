@@ -30,7 +30,9 @@
     <div *ngIf="!loading">
       <div *ngFor="let book of books">
         <div class="book">
-          <img src="https://covers.openlibrary.org/b/olid/{{ book.id }}-M.jpg" alt="{{ book.title }} Cover">
+          <div class="img">
+            <img src="https://covers.openlibrary.org/b/olid/{{ book.id }}-M.jpg" alt="{{ book.title }} Cover">
+          </div>
           <div class="bookInfo">
             <h2>{{ book.title }}</h2>
             <p>{{ book.author }}</p>
