@@ -82,7 +82,6 @@ app.post("/api/favorites/add",(req,res)=>{
     { _id: userIDFunct(req.body.token) },
     { $addToSet: { favorited: { id: req.body.id }}}
   ).then(() => {
-    console.log(req.body);
     res.status(201).json({
       message: "Book added to favorites successfully."
     })

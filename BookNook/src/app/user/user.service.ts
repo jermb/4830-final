@@ -112,7 +112,7 @@ export class UserService {
   //  Uses the open library api to get information on books from the book ids
   private async getBook(id: string) {
     var title, author, publication;
-
+    var trybook = false;
     //  Uses the OpenLibrary ID to get information on the book
     await fetch(`https://openlibrary.org/works/${ id }.json`)
     .then(response => response.json())
@@ -134,8 +134,36 @@ export class UserService {
       // handle any errors
       console.log(`Could not load book. https://openlibrary.org/works/${ id }.json`);
       console.log(error);
+      trybook = true;
       return;
     });
+
+    if (trybook) {
+      await fetch(`https://openlibrary.org/books/${ id }.json`)
+      .then(response => response.json())
+      .then(data => {
+        title = data["title"];
+        var author_key = data["authors"][0]["author"]["key"]
+        publication = new Date(data["first_publish_date"]).getFullYear();
+        if (Number.isNaN(publication)) publication = new Date(data["publish_date"]).getFullYear();
+        console.log(title);
+
+        //  Uses the author_key to make another api call to get the author name.
+        return fetch(`https://openlibrary.org${ author_key }.json`)
+      })
+      .then(response => response.json())
+      .then(data => {
+        author = data["name"];
+      })
+      .catch(error => {
+        // handle any errors
+        console.log(`Could not load book. https://openlibrary.org/works/${ id }.json`);
+        console.log(error);
+        return;
+      });
+    }
+
+
     const book: Book = {title: title, author: author, publication: publication, id: id};
     return book;
   }
