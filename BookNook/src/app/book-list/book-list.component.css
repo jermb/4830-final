@@ -1,4 +1,9 @@
-#bookmarks{
+#lists {
+  overflow-y: scroll;
+  height: 85%;
+}
+
+#bookmarks, #favorites{
   display: flex;
   flex-direction: column;
   justify-content: center;

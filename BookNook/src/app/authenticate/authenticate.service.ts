@@ -4,6 +4,7 @@ import { Router } from "@angular/router";
 import { Subject } from "rxjs";
 
 import { Authdata } from "./data.model";
+import { LoginComponent } from "../login/login.component";
 
 @Injectable({ providedIn: "root" })
 export class AuthService {
@@ -38,10 +39,10 @@ export class AuthService {
     });
   }
 
-  async login(email: string, password: string) {
+  login(email: string, password: string, login: LoginComponent) {
     const authData: Authdata = { email: email, password: password };
-    var authed:boolean = false;
-    await this.http
+    // var authed:boolean = true;
+    this.http
       .post<{ message: string, token: string; expiresIn: number }>(
         "http://localhost:3000/api/user/login",
         authData
@@ -59,13 +60,11 @@ export class AuthService {
           console.log(expirationDate);
           this.saveAuthData(token, expirationDate);
           this.router.navigate(["/list"]);
-          authed = true;
         }
       },
       error => {
-        authed = false
+        login.failed()
       });
-      return authed;
   }
 
   autoAuthUser() {

@@ -34,7 +34,6 @@ router.post("/signup", (req, res, next) => {
  * Then checks the given password against hashed password stored in database.
  */
 router.post("/login", (req, res, next) => {
-  console.log("login try");
     let fetchedUser;
     User.findOne({ username: req.body.email })
       .then(user => {

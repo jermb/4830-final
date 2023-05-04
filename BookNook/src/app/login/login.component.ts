@@ -26,18 +26,23 @@ export class LoginComponent {
     //   this.isLoading = false;
     // }
 
-    const authed = await this.auth.login(form.value.username, form.value.password)
+    const authed: Boolean = false;
+    await this.auth.login(form.value.username, form.value.password, this);
     this.isLoading = false;
 
 
-    console.log(authed.valueOf());
+    // console.log("authed" + authed.valueOf());
 
-    if (!authed.valueOf()) {
-      this.errorMsg = "Username or password is incorrect.";
-    }
-    else {
-      this.errorMsg = "";
-    }
+    // if (!authed.valueOf()) {
+    //   this.errorMsg = "Username or password is incorrect.";
+    // }
+    // else {
+    //   this.errorMsg = "";
+    // }
+  }
+
+  failed() {
+    this.errorMsg = "Username or password is incorrect.";
   }
 }
 
